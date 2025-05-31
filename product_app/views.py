@@ -5,6 +5,7 @@ from rest_framework import status
 from backend_submission.serializers import ProductSerializer
 from .models import Product
 
+
 # Create your views here.
 class ProductList(APIView):
     def get(self, request):
@@ -23,7 +24,7 @@ class ProductList(APIView):
         if not products:
             return Response({
                 'products': [],
-            }, status=status.HTTP_404_NOT_FOUND)
+            }, status=status.HTTP_200_OK)
 
         serializers = ProductSerializer(products, many=True)
 
@@ -38,11 +39,10 @@ class ProductList(APIView):
         product = ProductSerializer(data=request.data, context={'request': request})
         if product.is_valid(raise_exception=True):
             product.save()
-            return Response({
-                'message': 'Product created successfully'
-            }, status=status.HTTP_201_CREATED)
+            return Response(product.data, status=status.HTTP_201_CREATED)
 
         return Response(product.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProductDetail(APIView):
     def get_object(self, pk):
@@ -60,6 +60,7 @@ class ProductDetail(APIView):
         """
         product = self.get_object(pk)
         serializer = ProductSerializer(product)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
@@ -78,10 +79,13 @@ class ProductDetail(APIView):
 
     def delete(self, request, pk):
         """
-        Deletes a product by its primary key.
+        Soft delete a product by setting is_delete to True.
         """
         product = self.get_object(pk)
-        product.delete()
+        product.is_delete = True
+        product.save()
+
         return Response({
             'message': 'Product deleted successfully'
         }, status=status.HTTP_204_NO_CONTENT)
+

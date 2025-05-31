@@ -11,7 +11,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'name', 'shop', 'location', 'sku', 'description', 'price', 'discount',
-                  'category', 'stock', 'is_available', 'picture', '_links']
+                  'category', 'stock', 'is_available', 'is_delete', 'picture', '_links']
 
     def get__links(self, obj):
         """

@@ -12,9 +12,10 @@ class Product(models.Model):
     sku = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     price = models.PositiveIntegerField()
-    discount = models.DecimalField(decimal_places=2, max_digits=10)
+    discount = models.PositiveIntegerField()
     category = models.CharField(max_length=100)
     stock = models.PositiveIntegerField()
     is_available = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
     picture = models.CharField(max_length=500, blank=True, null=True)
 
